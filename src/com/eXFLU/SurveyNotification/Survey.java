@@ -13,13 +13,13 @@ public class Survey extends Activity
 	    {  //this class is where we'll put the survey
 	        super.onCreate(savedInstanceState);
 	        
-	        String url = "http://SurveyMonkey.com";
+	       /* String url = "http://SurveyMonkey.com";
 	        Intent myIntent = new Intent(Intent.ACTION_VIEW);
 	        myIntent.setData(Uri.parse(url));
-	        startActivity(myIntent);
-	       /* TextView tv = new TextView(this);
+	        startActivity(myIntent);*/
+	        TextView tv = new TextView(this);
 	        tv.setText("[Insert Survey]");
-	        setContentView(tv);*/
+	        setContentView(tv);
 	    }
 
 }
