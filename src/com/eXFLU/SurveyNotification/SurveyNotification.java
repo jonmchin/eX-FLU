@@ -6,15 +6,18 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.widget.TextView;
 
 //won't have launcher, Bluetooth class will call this which will then call Survey Class
 public class SurveyNotification extends Activity
 {
-	public boolean wifiChecking = true;
+	private boolean wifiChecking = false;
+	private boolean isAppRunning = true;
+	private boolean wifiConnection = false;
+	
 
     /** Called when the activity is first created. */
     @Override
@@ -23,48 +26,63 @@ public class SurveyNotification extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        WifiManager myWifi;  
+        if (isAppRunning)
+        {
+        	if (wifiChecking == false)
+        	{
+        		timer();
+        	}
+        	if (wifiChecking == true)
+        	{
+        		if (wifiConnection) //if the device is connected to a wifi network
+        		{
+        			sendNotification();	    	
+        		}
+        	}
+        	// if the device isn't connected to a wifi network
+        	else   //eventually have a storage type system here, to store the bluetooth information
+        	{
+       			String url = "http://google.com";
+       			Intent myIntent = new Intent(Intent.ACTION_VIEW);
+       			myIntent.setData(Uri.parse(url));
+       			startActivity(myIntent);
+       		}
+        wifiChecking = false;
+	    }
+
+    }   
+    
+    //checkWifi changes the boolean 'wifiConnection'. If the device is connected to Wifi, it sets 'wifiConnection' to true.
+    //Otherwise it sets it to false. 
+    private void checkWifi()
+	{
+		WifiManager myWifi;  
 	    myWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 	    WifiInfo myWifiInfo = myWifi.getConnectionInfo();
 	    
-	    Timer myTimer = new Timer(10000, 1000);
-for (int i = 0; i < 10; i++) //temporary to test code
-{
-	    if (wifiChecking == false)
-	    {
-	    	myTimer.start();
-	    		while (wifiChecking == false)
-	    		{
-	    			if (myTimer.timerdone==true)
-	    			{
-	    				wifiChecking = true;
-	    				break;
-	    			}
-	    		}
-	    }
-	 /*   while (myWifiInfo.getNetworkId() == -1)
-	    {
-	    	//store information until user gets into wifi area
-	    }*/
-	    if (wifiChecking == true)
-	    {
-	    	if (myWifiInfo.getNetworkId() != -1) //if the device is connected to a wifi network
-	    	{
-	    		sendNotification();	    	
-	    	}
-	    	
-	    	// if the device isn't connected to a wifi network
-	    	else    //eventually have a storage type system here, to store the bluetooth information
-	    	{
-	    		TextView tv = new TextView(this);
-	    		tv.setText("[NO WIFI]");
-	    		setContentView(tv);
-	    	}
-	    	wifiChecking = false;
-	    }
-}
-    }   
-    void sendNotification()
+	    if (myWifiInfo.getNetworkId() != -1)
+	    	wifiConnection = true;
+	    else
+	    	wifiConnection = false;
+	}
+    
+    //timer makes the thread sleep (30 seconds right now) and then sets wifiChecking to true
+    private void timer()
+    {
+    	 try
+         {
+ 			Thread.sleep(30000);
+ 		} catch (InterruptedException e)
+ 		{
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 		}
+ 		checkWifi();
+ 		wifiChecking = true;
+    }
+    
+    //sendNotification sends a Notification to the user that launches the Survey class
+    private void sendNotification()
     {
     	String ns = Context.NOTIFICATION_SERVICE;
     	NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
