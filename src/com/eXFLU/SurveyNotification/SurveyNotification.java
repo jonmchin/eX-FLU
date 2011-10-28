@@ -6,10 +6,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.widget.TextView;
 
 //won't have launcher, Bluetooth class will call this which will then call Survey Class
 public class SurveyNotification extends Activity
@@ -18,7 +18,6 @@ public class SurveyNotification extends Activity
 	private boolean isAppRunning = true;
 	private boolean wifiConnection = false;
 	
-
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -36,24 +35,23 @@ public class SurveyNotification extends Activity
         	{
         		if (wifiConnection) //if the device is connected to a wifi network
         		{
-        			sendNotification();	    	
+        			sendNotification();
         		}
         	}
         	// if the device isn't connected to a wifi network
         	else   //eventually have a storage type system here, to store the bluetooth information
         	{
-       			String url = "http://google.com";
-       			Intent myIntent = new Intent(Intent.ACTION_VIEW);
-       			myIntent.setData(Uri.parse(url));
-       			startActivity(myIntent);
+        		 TextView tv = new TextView(this);
+        	     tv.setText("[NO WIFI]");
+        	     setContentView(tv);
        		}
         wifiChecking = false;
 	    }
 
     }   
     
-    //checkWifi changes the boolean 'wifiConnection'. If the device is connected to Wifi, it sets 'wifiConnection' to true.
-    //Otherwise it sets it to false. 
+    /**checkWifi changes the boolean 'wifiConnection'. If the device is connected to Wifi, it sets 'wifiConnection' to true.
+    Otherwise it sets it to false.*/ 
     private void checkWifi()
 	{
 		WifiManager myWifi;  
@@ -66,12 +64,12 @@ public class SurveyNotification extends Activity
 	    	wifiConnection = false;
 	}
     
-    //timer makes the thread sleep (30 seconds right now) and then sets wifiChecking to true
-    private void timer()
+    /**timer makes the thread sleep (30 seconds right now) and then sets wifiChecking to true*/
+    public void timer()
     {
     	 try
          {
- 			Thread.sleep(30000);
+ 			Thread.sleep(15000);
  		} catch (InterruptedException e)
  		{
  			// TODO Auto-generated catch block
@@ -81,7 +79,7 @@ public class SurveyNotification extends Activity
  		wifiChecking = true;
     }
     
-    //sendNotification sends a Notification to the user that launches the Survey class
+    /**sendNotification sends a Notification to the user that launches the Survey class*/
     private void sendNotification()
     {
     	String ns = Context.NOTIFICATION_SERVICE;
@@ -103,7 +101,6 @@ public class SurveyNotification extends Activity
     	notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
     	
     	final int Notification_ID = 1;
-    	
     	mNotificationManager.notify(Notification_ID, notification);	
     }
 }
