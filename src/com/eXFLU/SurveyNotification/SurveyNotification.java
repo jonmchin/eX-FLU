@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ public class SurveyNotification extends Activity
         	{
         		if (wifiConnection) //if the device is connected to a wifi network
         		{
-        			sendNotification();
+        			sendNotification(); 			
         		}
         	}
         	// if the device isn't connected to a wifi network
@@ -64,13 +65,14 @@ public class SurveyNotification extends Activity
 	    	wifiConnection = false;
 	}
     
-    /**timer makes the thread sleep (30 seconds right now) and then sets wifiChecking to true*/
+    /**timer makes the thread sleep (15 seconds right now) and then sets wifiChecking to true*/
     public void timer()
     {
-    	 try
-         {
+    	try
+    	{
  			Thread.sleep(15000);
- 		} catch (InterruptedException e)
+    	} 
+    	catch (InterruptedException e)
  		{
  			// TODO Auto-generated catch block
  			e.printStackTrace();
@@ -99,8 +101,8 @@ public class SurveyNotification extends Activity
     	Intent notificationIntent = new Intent(this, Survey.class);
     	PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
     	notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
-    	
-    	final int Notification_ID = 1;
+
+    	final int Notification_ID = 1; //unique id for this specific notification
     	mNotificationManager.notify(Notification_ID, notification);	
     }
 }
