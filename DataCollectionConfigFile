@@ -1,0 +1,25 @@
+#Configure data recording tasks here.
+# Formats:
+# 	sample <sensor> every <number> <units> for <number> <units> 
+#	OR
+#	sample <sensor> continuously
+# sensor can be one of:
+# 	accelerometer
+#	magnetometer
+# 	bluetooth_proximity
+# 	gps
+# 	battery
+# 	wifi
+#	compass
+# units can be one of:
+# 	milliseconds
+# 	seconds
+# 	minutes
+# number can be any non-negative long.
+#
+
+#JON CHIN:	samples wifi and bluetooth every 5 minutes
+
+sample wifi every 5 minutes for 30 seconds
+sample bluetooth_proximity every 5 minutes for 30 seconds
+
